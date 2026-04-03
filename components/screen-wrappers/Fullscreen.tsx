@@ -16,9 +16,14 @@ export default function Fullscreen({
   padding,
   gap,
 }: FullScreenProps) {
+  const customStyle = {
+    gap,
+    padding,
+  };
+
   return (
     <SafeAreaProvider>
-      <View>
+      <View style={[styles.container, customStyle, center && styles.center]}>
         {children}
         <StatusBar style="light" />
       </View>
@@ -30,6 +35,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  center: {
     alignItems: "center",
     justifyContent: "center",
   },

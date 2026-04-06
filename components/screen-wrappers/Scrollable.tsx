@@ -1,10 +1,16 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 
 type ScrollableProps = {
   children: React.ReactNode;
-  padding?: 20;
+  padding?: number;
   gap?: number;
   onRefresh?: () => void;
 };
@@ -15,13 +21,29 @@ export default function Scrollable({
   gap,
   onRefresh,
 }: ScrollableProps) {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const Refresh = React.useCallback(() => {
+    setRefreshing(true);
+    onRefresh?.();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const customStyle = {
     gap,
     padding,
   };
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl refreshing={refreshing} onRefresh={Refresh} />
+        ) : undefined
+      }
+    >
       <View style={[styles.container, customStyle]}>
         {children}
         <StatusBar style="light" />
